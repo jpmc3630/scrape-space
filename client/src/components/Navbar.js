@@ -17,9 +17,9 @@ function Navbar(props) {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a className="navbar-brand" href="#">
+      <div className="navbar-brand">
         Space Scraper
-      </a>
+      </div>
       <button
         className="navbar-toggler"
         data-toggle="collapse"
@@ -82,18 +82,7 @@ function Navbar(props) {
                 Most Comments
               </a>
             </div>
-
-
-
-
-
-
           </li>
-          {/* <li className="nav-item">
-            <a className="nav-link disabled" href="#">
-              Disabled
-            </a>
-          </li> */}
         </ul>
         <form className="form-inline my-2 my-lg-0">
           <input

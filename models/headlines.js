@@ -13,6 +13,7 @@ var headlinesSchema = new Schema({
   body: String,
   url: String,
   date: Date,
+  commentsTally: Number,
   commentsIds: [
     {
       // Store ObjectIds in the array

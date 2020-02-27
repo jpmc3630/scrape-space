@@ -42,7 +42,13 @@ class App extends Component {
       }
     };
 
-  handleSortOrder = async (order) => { this.getScrape(order); };
+    doSort = async (order) => {
+      let sortData = await axios.get(`/sort/${order}`);
+      console.log(sortData.data);
+      this.setState(sortData.data);
+  };
+
+  handleSortOrder = async (order) => { this.doSort(order); };
   
 
   comKey = async (asd) => { 

@@ -6,9 +6,7 @@ var Schema = mongoose.Schema;
 // Using the Schema constructor, create a new NoteSchema object
 // This is similar to a Sequelize model
 var CommentsSchema = new Schema({
-  // `title` must be of type String
   username: String,
-  // `body` must be of type String
   body: String
 });
 

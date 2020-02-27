@@ -5,10 +5,6 @@ import axios from 'axios';
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 
-function ListItem(props) {
-  // Correct! There is no need to specify the key here:
-  return <li>{props.value}</li>;
-}
 
 function CommentsModal(props) {
     
@@ -39,7 +35,6 @@ function CommentsModal(props) {
             setIntervalIsSet(interval);
           }
         }
-
 
     const loadComments = () => {
         axios
@@ -77,15 +72,15 @@ function CommentsModal(props) {
           </Modal.Header>
           <Modal.Body>
             <div>
-            <ul>
-                {comments.length <= 0
-                ? "NO COMMENTS YET"
-                : 
-                comments.map((comment) =>
-                 <li key={comment._id}>{comment.username}: {comment.body}</li>)
-                }
-            </ul>
-        </div>
+              <ul>
+                  {comments.length <= 0
+                  ? "NO COMMENTS YET"
+                  : 
+                  comments.map((comment) =>
+                  <li key={comment._id}>{comment.username}: {comment.body}</li>)
+                  }
+              </ul>
+            </div>
 
         <div style={{ padding: '10px' }}>
             <input

@@ -51,7 +51,7 @@ app.post("/submit", function(req, res) {
       // If a Note was created successfully, find one User (there's only one) and push the new Note's _id to the User's `notes` array
       // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
       // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-      return db.headlines.findOneAndUpdate({ _id: req.body.articleId }, { $push: { commentsIds: dbComment._id } }, { new: true });
+      return db.headlines.findOneAndUpdate({ _id: req.body.articleId }, { $push: { commentsIds: dbComment._id }, $inc: { commentsTally: 1 }  }, { new: true });
     })
     .then(function(dbHeadline) {
       // If the User was updated successfully, send it back to the client
@@ -98,6 +98,25 @@ app.get('/search/:criteria', async (req, res) => {
      }); 
   } 
 });
+
+app.get('/sort/:order', async (req, res) => {
+      // get all the news and sort it appropriately
+    try {
+      let news;
+      if (req.params.order === "comments") {
+          news = await db.headlines.find({}).sort({commentsTally: -1});
+      } else if (req.params.order==="oldest") {
+          news = await db.headlines.find({}).sort({date: 1});
+      } else {
+        news = await db.headlines.find({}).sort({date: -1});
+      }
+      res.json({ success: true, data: news });
+      
+    } catch (error) {
+      console.log("We have an error: " + error);
+    }
+});
+
 
 app.get('/scrape/:order', async (req, res) => {
   try {
@@ -163,7 +182,7 @@ app.get('/scrape/:order', async (req, res) => {
     // get all the news and sort it appropriately
     let news;
     if (req.params.order === "comments") {
-        news = await db.headlines.find({}).sort({commentsIds: -1});
+        news = await db.headlines.find({}).sort({commentsTally: -1});
     } else if (req.params.order==="oldest") {
         news = await db.headlines.find({}).sort({date: 1});
     } else {
@@ -171,17 +190,18 @@ app.get('/scrape/:order', async (req, res) => {
     }
     res.json({ success: true, data: news });
   } catch (error) {
-    console.log("I'VE FOUNT AN ERROR!" + error);
+    console.log("We have an error: " + error);
   }
 });
 
 
 // Send every other request to the React app
 // Define any API routes before this runs
-
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`🌎 ==> API server now on port ${PORT}!`);
