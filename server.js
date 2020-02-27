@@ -110,7 +110,7 @@ app.get('/scrape/:order', async (req, res) => {
 
     $('article.search-result-news').each(function (i, elem) {
       let title = $(this).find('.article-name').text();
-      let img = $(this).find('img').attr('data-src');
+      let img = $(this).find('img').attr('data-original-mos');
       let byline = $(this).find('.byline').text().replace(/(\r\n|\n|\r)/gm,"").trim();
       byline = [byline.slice(0, 2), ' ', byline.slice(2)].join('');
       let body = $(this).find('.synopsis').text().replace(/(\r\n|\n|\r)/gm,""); 
@@ -131,19 +131,15 @@ app.get('/scrape/:order', async (req, res) => {
     });
 
 
-    console.log('hash array:');
-    console.log(hashArr);
-
     let hashesFound = await db.headlinesHash.find({
         hHash : hashArr
       });
 
-    console.log('hashes found:');
-    console.log(hashesFound);
 
     let newHashes = [];
     let newNews = [];
     
+    //check if news hashes are new
     for ( let i = 0 ; i < hashArr.length ; i++ ) {
       let match = false;
       for ( let j = 0 ; j < hashesFound.length ; j++ ) {
@@ -155,16 +151,11 @@ app.get('/scrape/:order', async (req, res) => {
       }
     }
 
-
-    console.log('new hashes:');
-    console.log(newHashes);
-    console.log('new news:');
-    console.log(newNews);
-
-    console.log('new hashes count:');
-    console.log(newHashes.length);
-    console.log('new news count:');
-    console.log(newNews.length);
+    if (newNews > 0) {
+        console.log( newNews.length + ' new news articles scraped!' );
+    } else {
+      console.log('No new news to scrape!');
+    };
  
     await db.headlinesHash.create(newHashes);
     await db.headlines.create(newNews);
@@ -187,7 +178,6 @@ app.get('/scrape/:order', async (req, res) => {
 
 // Send every other request to the React app
 // Define any API routes before this runs
-
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
