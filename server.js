@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
-mongoose.connect("mongodb+srv://admin:admin@cluster0-nizeq.mongodb.net/test?retryWrites=true&w=majority" , { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect("INSERT MONGODB SERVER URL HERE" , { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Define API routes here
 
