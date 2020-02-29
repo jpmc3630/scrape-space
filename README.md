@@ -1,29 +1,16 @@
-# Create React Express App
+# Scrape Space
+Check it out live at <https://scrape-space.herokuapp.com>
 
-## About This Boilerplate
+## About
+I made this scraper to learn React JS. This is my first Express/React app. 
 
-This setup allows for a Node/Express/React app which can be easily deployed to Heroku.
+## Features
+* Scrapes the news from Space.com.
+* Save new news articles into a MongoDB database.
+* Uses a hash collection to quickly compare if article is new or not.
+* Comments can be made on each article and are timedate stamped with MomentJS.
+* Articles can be filtered with a search string.
+* Articles can be ordered by date ascending/descending or by most comments.
 
-The front-end React app will auto-reload as it's updated via webpack dev server, and the backend Express app will auto-reload independently with nodemon.
-
-## Starting the app locally
-
-Start by installing front and backend dependencies. While in this directory, run the following command:
-
-```
-npm install
-```
-
-This should install node modules within the server and the client folder.
-
-After both installations complete, run the following command in your terminal:
-
-```
-npm start
-```
-
-Your app should now be running on <http://localhost:3000>. The Express server should intercept any AJAX requests from the client.
-
-## Deployment (Heroku)
-
-To deploy, simply add and commit your changes, and push to Heroku. As is, the NPM scripts should take care of the rest.
+## Technologies Used
+MongoDB, Mongoose, React JS, Express, Node, Javascript, Jquery, CSS, Bootstrap, HTML, Git.
