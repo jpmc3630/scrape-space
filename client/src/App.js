@@ -13,7 +13,8 @@ class App extends Component {
     this.state = {
       data: [],
       statusText: 'Scraping...',
-      search: 'moo'
+      search: ' ',
+      sort: 'initial'
     };
     // this.getScrape = this.getScrape.bind(this);
     // this.handleSearch = this.handleSearch.bind(this);
@@ -24,6 +25,8 @@ class App extends Component {
     this.handleSearch();
   }
 
+  updateSearch = async (newSearch) => {await this.setState({search: newSearch}); console.log('Search Criteria: ' + this.state.search)};
+  updateSort = async (newSort) => {await this.setState({sort: newSort}); console.log('Sort Criteria: ' + this.state.sort)};
 
   getScrape = async (order) => {
       let scrapeData = await axios.get(`/scrape/${order}`);
@@ -32,18 +35,18 @@ class App extends Component {
   };
 
   handleSearch = async (criteria, order) => { 
+      // if (order) this.setState({order});
       if (criteria) {
           this.setState({search: criteria});
           this.setState({statusText: `Searching for '${criteria}' ...`}); 
       let searchData = await axios
-      .get(`/search/${criteria}`);
+      .get(`/search/${criteria}/${this.state.sort}`);
       console.log(searchData);
       if (searchData.data.data.length < 1) this.setState({statusText: `No results found for '${criteria}'`}) ;
       this.setState({data: searchData.data.data});  
       } else {
           this.setState({statusText: `Scraping ...`});
           this.getScrape(order);
-          
       }
     };
 
@@ -81,6 +84,9 @@ class App extends Component {
         <Navbar 
         handleSearch = {this.handleSearch} 
         handleSortOrder = {this.handleSortOrder}
+        updateSearch = {this.updateSearch} 
+        updateSort = {this.updateSort}
+
         />
 
         <div className="container-fluid pb-3">

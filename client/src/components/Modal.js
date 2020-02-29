@@ -14,11 +14,6 @@ const useFocus = () => {
 };
 
 
-
-  
-
-
-
 function CommentsModal(props) {
     
     const [comments, setComments] = useState([]);

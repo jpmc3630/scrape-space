@@ -29,14 +29,9 @@ mongoose.connect("mongodb+srv://admin:admin@cluster0-nizeq.mongodb.net/test?retr
 app.get('/comments/:artId', async (req, res) => {
 
   db.headlines.find({_id: req.params.artId })
-  .populate({path: 'commentsIds', options: {sort:{"created_at": "descending"}}})
-  
+  .populate({path: 'commentsIds', options: {sort:{"created_at": "descending"}}}) 
   .then(function(popComments) {
-
-    console.log(popComments);
-
     res.json({ data: popComments[0].commentsIds });
-    
   }).catch(function(err) {
     res.json(err);
   });
@@ -65,25 +60,32 @@ app.post("/submit", function(req, res) {
 });
 
 
-
-
-
-
 function escapeRegex(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 };
-// req.query.search
-app.get('/search/:criteria', async (req, res) => {
+
+
+app.get('/search/:criteria/:order', async (req, res) => {
+  let sortObj = {};
+  if (req.params.order==="comments") {
+    sortObj = {commentsTally: -1}; 
+  } else if (req.params.order==="oldest") {
+    sortObj = {date: 1}; 
+  } else {
+    sortObj = {date: -1};
+  };
+
+
   if (req.params.criteria !== undefined) {
-     const regex = new RegExp(escapeRegex(req.params.criteria), 'gi');
-     db.headlines.find({$or:[{ "body": regex },{ "title": regex },{ "byline": regex },{ "url": regex }]}, function(err, news) {
-         if(err) {
-             console.log(err);
-         } else {
-          res.json({ success: true, data: news });
-         }
-     }); 
-  } 
+
+    try {
+      const regex = new RegExp(escapeRegex(req.params.criteria), 'gi');
+      let news = await db.headlines.find({$or:[{ "body": regex },{ "title": regex },{ "byline": regex },{ "url": regex }]}).sort(sortObj);
+      res.json({ success: true, data: news });
+    } catch (error) {
+        console.log("We have an error: " + error);
+    }
+  };
 });
 
 app.get('/sort/:order', async (req, res) => {
@@ -158,10 +160,11 @@ app.get('/scrape/:order', async (req, res) => {
       }
     }
 
-    if (newNews > 0) {
-        console.log( newNews.length + ' new news articles scraped!' );
+    
+    if (newNews.length > 0) {
+        console.log( newNews.length + ' new news articles scraped to database!' );
     } else {
-      console.log('No new news to scrape!');
+      console.log('No new news to scrape! Retrieved news from database.');
     };
  
     await db.headlinesHash.create(newHashes);

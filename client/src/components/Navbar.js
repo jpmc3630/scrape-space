@@ -6,7 +6,7 @@ function Navbar(props) {
   const [searchText, setSearchText] = useState('');
   const passSearch = (e) => {
     e.preventDefault();
-    props.handleSearch(searchText);
+    props.handleSearch(searchText, sortOrder);
   }
 
   const [sortOrder, setSortOrder] = useState('latest');
@@ -62,6 +62,7 @@ function Navbar(props) {
               onClick={() => 
               {setSortOrder("latest");
               passSortOrder("latest");
+              props.updateSort("latest");
             }}>
                 Latest First
               </button>
@@ -69,6 +70,7 @@ function Navbar(props) {
               onClick={() => 
                 {setSortOrder("oldest");
                 passSortOrder("oldest");
+                props.updateSort("oldest");
               }}>
                 Oldest First
               </button>
@@ -77,6 +79,7 @@ function Navbar(props) {
               onClick={() => 
                 {setSortOrder("comments");
                 passSortOrder("comments");
+                props.updateSort("comments");
               }}>
                 Most Comments
               </button>
@@ -91,7 +94,7 @@ function Navbar(props) {
             aria-label="Search"
             onChange={(e) => setSearchText(e.target.value)}
           />
-          <button className="btn btn-outline-success my-2 my-sm-0" onClick={passSearch}>
+          <button className="btn btn-outline-success my-2 my-sm-0" onClick={(e) => {passSearch(e); props.updateSearch(searchText);}}>
             Search
           </button>
 
