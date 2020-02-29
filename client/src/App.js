@@ -16,14 +16,10 @@ class App extends Component {
       search: 'noSearch',
       sort: 'initial'
     };
-    // this.getScrape = this.getScrape.bind(this);
-    // this.handleSearch = this.handleSearch.bind(this);
  }
 
   componentDidMount() {
-    // this.getScrape();
     this.handleSearch();
-    
   }
 
   updateSearch = async (newSearch) => {await this.setState({search: newSearch});};
@@ -35,7 +31,6 @@ class App extends Component {
   };
 
   handleSearch = async (criteria, order) => { 
-      // if (order) this.setState({order});
       if (criteria) {
           this.setState({search: criteria});
           this.setState({statusText: `Searching for '${criteria}' ...`});

@@ -1,5 +1,4 @@
 var mongoose = require("mongoose");
-var mongoose_fuzzy_searching = require('mongoose-fuzzy-searching');
 
 // Save a reference to the Schema constructor
 var Schema = mongoose.Schema;
@@ -22,26 +21,6 @@ var headlinesSchema = new Schema({
       ref: "comments"
     }
   ]
-});
-
-
-headlinesSchema.plugin(mongoose_fuzzy_searching, {
-	fields: [
-		{
-			name: 'title',
-			weight: 3,
-			minSize:2,
-		}, {
-			name: 'body',
-			weight: 2,
-			minSize:2,
-		}, {
-			name: 'byline',
-			weight: 1,
-			minSize:2,
-			escapeSpecialCharacters: false
-		}
-	]
 });
 
 
