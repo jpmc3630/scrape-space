@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import axios from 'axios';
 import moment from 'moment';
 import Modal from 'react-bootstrap/Modal'
@@ -16,6 +16,7 @@ const useFocus = () => {
 
 function CommentsModal(props) {
     
+    const [statusText, setStatusText] = useState('Loading comments....');
     const [comments, setComments] = useState([]);
     const [intervalIsSet, setIntervalIsSet] = useState(false);
     const [show, setShow] = useState(false);
@@ -53,9 +54,12 @@ function CommentsModal(props) {
           `/comments/${props.artId}`
         )
         .then(({ data }) => {
-              setComments(data.data);
-              console.log(data.data);
-              });
+            if (data.data.length < 1) {
+              setStatusText('Be the first to leave a comment!');
+            } else {
+                setComments(data.data);
+            };
+        });
     }
       
     const submitComment = async () => {
@@ -76,9 +80,6 @@ function CommentsModal(props) {
     }
 
 
-    
-
-
     return (
         
       <>
@@ -94,7 +95,7 @@ function CommentsModal(props) {
             <div className="comments-list">
               
                   {comments.length <= 0
-                  ? "NO COMMENTS YET"
+                  ? <div className="comment-status-div">{statusText}</div>
                   : 
                   comments.map((comment) =>
                   <div className="comment-card card bg-light" key={comment._id}>
@@ -105,7 +106,6 @@ function CommentsModal(props) {
                   </div>
                   )
                   }
-              
 
             </div>
 

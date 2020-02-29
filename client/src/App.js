@@ -13,7 +13,7 @@ class App extends Component {
     this.state = {
       data: [],
       statusText: 'Scraping...',
-      search: ' ',
+      search: 'noSearch',
       sort: 'initial'
     };
     // this.getScrape = this.getScrape.bind(this);
@@ -23,14 +23,14 @@ class App extends Component {
   componentDidMount() {
     // this.getScrape();
     this.handleSearch();
+    
   }
 
-  updateSearch = async (newSearch) => {await this.setState({search: newSearch}); console.log('Search Criteria: ' + this.state.search)};
-  updateSort = async (newSort) => {await this.setState({sort: newSort}); console.log('Sort Criteria: ' + this.state.sort)};
+  updateSearch = async (newSearch) => {await this.setState({search: newSearch});};
+  updateSort = async (newSort) => {await this.setState({sort: newSort});};
 
   getScrape = async (order) => {
       let scrapeData = await axios.get(`/scrape/${order}`);
-      console.log(scrapeData.data);
       this.setState(scrapeData.data);
   };
 
@@ -38,10 +38,8 @@ class App extends Component {
       // if (order) this.setState({order});
       if (criteria) {
           this.setState({search: criteria});
-          this.setState({statusText: `Searching for '${criteria}' ...`}); 
-      let searchData = await axios
-      .get(`/search/${criteria}/${this.state.sort}`);
-      console.log(searchData);
+          this.setState({statusText: `Searching for '${criteria}' ...`});
+      let searchData = await axios.get(`/search/${criteria}/${this.state.sort}`);
       if (searchData.data.data.length < 1) this.setState({statusText: `No results found for '${criteria}'`}) ;
       this.setState({data: searchData.data.data});  
       } else {
@@ -51,20 +49,16 @@ class App extends Component {
     };
 
     doSort = async (order) => {
-      let sortData = await axios.get(`/sort/${order}`);
-      console.log(sortData.data);
+      let sortData = await axios.get(`/search/${this.state.search}/${order}`);
       this.setState(sortData.data);
   };
 
   handleSortOrder = async (order) => { this.doSort(order); };
   
   incrementCommentButton = (arrIndex) => {
-    console.log('index we aftr: ' + arrIndex);
     let temp = this.state.data;
-    console.log('old tally: : ' + temp[arrIndex].commentsTally);
     
     temp[arrIndex].commentsTally++;
-    console.log('incremented now: ' + temp[arrIndex].commentsTally);
     this.setState({data: temp});
   };
 
@@ -94,7 +88,7 @@ class App extends Component {
       
         
           {data.length <= 0
-            ? <div>{this.state.statusText}</div>
+            ? <div className="status-div">{this.state.statusText}</div>
             : data.map((dat, index) => (
                 
             <div key={dat._id} className="card bg-light news-card">

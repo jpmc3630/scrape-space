@@ -75,36 +75,43 @@ app.get('/search/:criteria/:order', async (req, res) => {
     sortObj = {date: -1};
   };
 
-
-  if (req.params.criteria !== undefined) {
-
-    try {
-      const regex = new RegExp(escapeRegex(req.params.criteria), 'gi');
-      let news = await db.headlines.find({$or:[{ "body": regex },{ "title": regex },{ "byline": regex },{ "url": regex }]}).sort(sortObj);
-      res.json({ success: true, data: news });
-    } catch (error) {
-        console.log("We have an error: " + error);
-    }
+  let searchStr = '';
+  if (req.params.criteria === 'noSearch') {
+    searchStr = '';
+  } else {
+    searchStr = req.params.criteria;
   };
+  
+  try {
+    const regex = new RegExp(escapeRegex(searchStr), 'gi');
+    let news = await db.headlines.find({$or:[{ "body": regex },{ "title": regex },{ "byline": regex },{ "url": regex }]}).sort(sortObj);
+    res.json({ success: true, data: news });
+  } catch (error) {
+      console.log("We have an error: " + error);
+  };
+ 
+
 });
 
-app.get('/sort/:order', async (req, res) => {
-      // get all the news and sort it appropriately
-    try {
-      let news;
-      if (req.params.order === "comments") {
-          news = await db.headlines.find({}).sort({commentsTally: -1});
-      } else if (req.params.order==="oldest") {
-          news = await db.headlines.find({}).sort({date: 1});
-      } else {
-        news = await db.headlines.find({}).sort({date: -1});
-      }
-      res.json({ success: true, data: news });
+// app.get('/sort/:order/:search', async (req, res) => {
+//       // get all the news and sort it appropriately
+//     try {
+//       let findObj = {};
+//       // if (!req.params.search==="noSearch") findObj = 
+//       let news;
+//       if (req.params.order === "comments") {
+//           news = await db.headlines.find(findObj).sort({commentsTally: -1});
+//       } else if (req.params.order==="oldest") {
+//           news = await db.headlines.find(findObj).sort({date: 1});
+//       } else {
+//         news = await db.headlines.find(findObj).sort({date: -1});
+//       }
+//       res.json({ success: true, data: news });
       
-    } catch (error) {
-      console.log("We have an error: " + error);
-    }
-});
+//     } catch (error) {
+//       console.log("We have an error: " + error);
+//     }
+// });
 
 
 app.get('/scrape/:order', async (req, res) => {

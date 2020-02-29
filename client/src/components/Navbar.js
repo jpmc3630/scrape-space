@@ -18,7 +18,7 @@ function Navbar(props) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="navbar-brand">
-        Space Scraper
+        Scrape Space
       </div>
       <button
         className="navbar-toggler"
@@ -90,7 +90,7 @@ function Navbar(props) {
           <input
             className="form-control mr-sm-2"
             type="search"
-            placeholder="Search"
+            placeholder="Search Filter"
             aria-label="Search"
             onChange={(e) => setSearchText(e.target.value)}
           />
