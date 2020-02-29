@@ -12,6 +12,7 @@ I made this scraper to learn React JS. This is my first Express/React app.
 * Comments can be made on each article and are timedate stamped with MomentJS.
 * Articles can be filtered with a search string.
 * Articles can be ordered by date ascending/descending or by most comments.
+* Mobile responsive
 
 ## Technologies Used
 MongoDB, Mongoose, React JS, Express, Node, Javascript, Jquery, CSS, Bootstrap, HTML, Git, Heroku.
