@@ -1,5 +1,6 @@
-.navbar-brand {
-  /* background-color: #28a745; */
+
+.container-fluid {
+  max-width: 98%;
 }
 
 .topRightShadowBlur
@@ -14,7 +15,20 @@
   -o-box-shadow: 10px -10px 5px rgba(0,0,0,0.6);
 }
 
-/* background-color: lightgray;  drop-shadow: 10px; */
+.link-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+.link-button:hover,
+.link-button:focus {
+text-decoration: none;
+}
 
 .news-card {
   height: 162px;
@@ -22,6 +36,7 @@
   overflow: hidden;
   margin-top: 5px;
 }
+
 
 
 .news-image {
@@ -56,17 +71,15 @@
   color: #999;
   position: absolute;
   top: 100px;
-  right: 20px;
+  right: 0px;
   /* margin-top:5px; */
 }
 
 .news-body {
   font-family: 'Ubuntu', sans-serif;
-
-  height: 32px;
   position: relative;
-  /* overflow: hidden;
-  text-overflow: ellipsis; */
+  overflow: hidden;
+  text-overflow: ellipsis; 
   display: -webkit-box;
   -webkit-line-clamp: 2; /* number of lines to show */
   -webkit-box-orient: vertical;
@@ -86,19 +99,51 @@ div.cover {
   background-size: cover;
 }
 
-.comment-name {
-  width: 80%;
+.comments-list {
+  max-height: 300px;
+  overflow: auto;
+  word-wrap: break-word;
+}
+
+.comment-card {
+  margin: 6px;
+  padding: 10px;
+  overflow: auto;
+}
+
+.comment-author {
+font-weight: bold;
+position:relative;
+display: inline;
+float: left;
+}
+
+.comment-date {
+  color: #999;
+  float: right;
+  display: inline;
+}
+
+.comment-body {
+color: black;
+}
+
+.comment-name-text {
+  width: 100%;
   border-width:1; 
   height:20px;
 }
 
-.comment-body {
-  width: 80%;
+.comment-body-text {
+  width: 100%;
   border-width:1; 
-  
-  
+  margin-top:4px;
+  margin-bottom: 4px;
 }
 
+.comment-button {
+  width: 100%;
+}
 
 
 @media (max-width: 40em) {
@@ -109,13 +154,14 @@ div.cover {
     margin-left: 10px;
     margin-top: 0px;
   }
-  .news-byline {
+  .news-author {
     display: none;
   }
 }
 
-@media (max-width: 1200px) {
-  .news-byline {
+@media (max-width: 991px) {
+  .news-author {
     display: none;
   }
+
 }

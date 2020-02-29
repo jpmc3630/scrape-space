@@ -12,7 +12,7 @@ class App extends Component {
     super();
     this.state = {
       data: [],
-      baba: [],
+      statusText: 'Scraping...',
       search: 'moo'
     };
     // this.getScrape = this.getScrape.bind(this);
@@ -24,6 +24,7 @@ class App extends Component {
     this.handleSearch();
   }
 
+
   getScrape = async (order) => {
       let scrapeData = await axios.get(`/scrape/${order}`);
       console.log(scrapeData.data);
@@ -32,13 +33,17 @@ class App extends Component {
 
   handleSearch = async (criteria, order) => { 
       if (criteria) {
-          this.setState({search: criteria}); 
+          this.setState({search: criteria});
+          this.setState({statusText: `Searching for '${criteria}' ...`}); 
       let searchData = await axios
       .get(`/search/${criteria}`);
       console.log(searchData);
+      if (searchData.data.data.length < 1) this.setState({statusText: `No results found for '${criteria}'`}) ;
       this.setState({data: searchData.data.data});  
       } else {
+          this.setState({statusText: `Scraping ...`});
           this.getScrape(order);
+          
       }
     };
 
@@ -50,6 +55,15 @@ class App extends Component {
 
   handleSortOrder = async (order) => { this.doSort(order); };
   
+  incrementCommentButton = (arrIndex) => {
+    console.log('index we aftr: ' + arrIndex);
+    let temp = this.state.data;
+    console.log('old tally: : ' + temp[arrIndex].commentsTally);
+    
+    temp[arrIndex].commentsTally++;
+    console.log('incremented now: ' + temp[arrIndex].commentsTally);
+    this.setState({data: temp});
+  };
 
   comKey = async (asd) => { 
     let eee = asd + 'com';
@@ -69,33 +83,35 @@ class App extends Component {
         handleSortOrder = {this.handleSortOrder}
         />
 
-        <div className="container">
+        <div className="container-fluid pb-3">
           <div className="row justify-content-md-center">
       
         
           {data.length <= 0
-            ? 'NO DB ENTRIES YET'
-            : data.map((dat) => (
+            ? <div>{this.state.statusText}</div>
+            : data.map((dat, index) => (
                 
-            <div key={dat._id} className="card  bg-light news-card">
+            <div key={dat._id} className="card bg-light news-card">
               <div className="card-body">
                 <div className="news-image cover" style={{ backgroundImage: `url(${dat.img})` }}></div>
                 <div className="news-content">
                     <p className="news-title">{dat.title}</p>
                     <p className="news-body">{dat.body}</p>
-                    <p className="news-byline">{dat.byline} - 
-                      {moment(dat.date).fromNow()} - 
-                      <a href={dat.url} target="_blank" className="news-url">Full Article</a> - 
+                    <span className="news-byline"><span className="news-author">{dat.byline}&nbsp;&nbsp; 
+                      {moment(dat.date).fromNow()}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                      <a href={dat.url} rel="noopener noreferrer" target="_blank" className="news-url">Full Article</a>&nbsp;&nbsp;&nbsp;&nbsp;
                       
                         <CommentsModal 
                           key={this.comKey(dat._id)}
+                          arrIndex={index} 
+                          comTally={dat.commentsTally} 
+                          incComFunc={this.incrementCommentButton}
                           artId={dat._id} 
                           artTitle={dat.title} 
                           comments={dat.commentsIds} 
                           onClick={this.loadCommentsFromDB}
                         />
-                      </p>
-                  
+                      </span>
                   
                 </div>
               </div>

@@ -44,43 +44,42 @@ function Navbar(props) {
             </a>
           </li> */}
           <li className="nav-item dropdown">
-            <a
-              className="nav-link dropdown-toggle"
+            <button
+              className="link-button nav-link dropdown-toggle"
               href="#"
               id="navbarDropdown"
-              role="button"
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
             >
               Order by {sortOrder}
-            </a>
+            </button>
 
 
 
             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a className="dropdown-item" href="#" 
+              <button className="button-link dropdown-item" 
               onClick={() => 
               {setSortOrder("latest");
               passSortOrder("latest");
             }}>
                 Latest First
-              </a>
-              <a className="dropdown-item" href="#" 
+              </button>
+              <button className="button-link dropdown-item"  
               onClick={() => 
                 {setSortOrder("oldest");
                 passSortOrder("oldest");
               }}>
                 Oldest First
-              </a>
+              </button>
               <div className="dropdown-divider" />
-              <a className="dropdown-item" href="#"
+              <button className="button-link dropdown-item" 
               onClick={() => 
                 {setSortOrder("comments");
                 passSortOrder("comments");
               }}>
                 Most Comments
-              </a>
+              </button>
             </div>
           </li>
         </ul>

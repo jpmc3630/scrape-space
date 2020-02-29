@@ -1,9 +1,22 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from 'axios';
-
+import moment from 'moment';
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
+
+
+const useFocus = () => {
+  const htmlElRef = useRef(null)
+  const setFocus = () => {htmlElRef.current &&  htmlElRef.current.focus()}
+
+  return [ htmlElRef, setFocus ] 
+};
+
+
+
+  
+
 
 
 function CommentsModal(props) {
@@ -13,7 +26,10 @@ function CommentsModal(props) {
     const [show, setShow] = useState(false);
     const [usernameText, setUsernameText] = useState('');
     const [bodyText, setBodyText] = useState('');
-  
+    const [inputRef, setInputFocus] = useFocus();
+
+
+
     const handleClose = () => {
         //hide modal
         setShow(false);
@@ -48,22 +64,31 @@ function CommentsModal(props) {
     }
       
     const submitComment = async () => {
-        
-        await axios.post('/submit', {
+      
+      // props.arrIndex;
+      if (usernameText && bodyText) {
+          await axios.post('/submit', {
             articleId : props.artId,
             username : usernameText,
             body : bodyText
-        });
+          });
 
-        loadComments();
-      };
-      
+          loadComments();
+          props.incComFunc(props.arrIndex);
+          setBodyText('');
+          
+        };
+    }
+
+
+    
+
 
     return (
         
       <>
         <Button variant="secondary" size="sm" onClick={handleShow}>
-          Show Comments ({props.comments.length})
+          Comments ({props.comTally})
         </Button>
         
         <Modal show={show} onHide={handleClose}>
@@ -71,15 +96,22 @@ function CommentsModal(props) {
             <Modal.Title>{props.artTitle}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div>
-              <ul>
+            <div className="comments-list">
+              
                   {comments.length <= 0
                   ? "NO COMMENTS YET"
                   : 
                   comments.map((comment) =>
-                  <li key={comment._id}>{comment.username}: {comment.body}</li>)
+                  <div className="comment-card card bg-light" key={comment._id}>
+                    <div><div className="comment-author">{comment.username}</div>
+                    <div className="comment-date">{moment(comment.created_at).fromNow()}</div></div>
+                    <div className="comment-body">{comment.body}</div>
+                    
+                  </div>
+                  )
                   }
-              </ul>
+              
+
             </div>
 
         <div style={{ padding: '10px' }}>
@@ -87,20 +119,22 @@ function CommentsModal(props) {
                 type="text"
                 onChange={(e) => setUsernameText(e.target.value)}
                 placeholder="Name"
-                className="comment-text"
-                
+                className="comment-name-text"
+                maxLength="30"
             />
             <input
                 type="text"
                 onChange={(e) => setBodyText(e.target.value)}
                 placeholder="Comment..."
-                className="comment-body"
+                className="comment-body-text"
                 wrap="hard"
                 cols={40}
                 rows={10}
+                value= {bodyText}
+                ref={inputRef}
             />
-            <Button variant="secondary" size="sm" onClick={submitComment}>
-                Comment
+            <Button className="comment-button" variant="secondary" size="sm" onClick={() => {submitComment(); setInputFocus();}}>
+                Submit Comment
             </Button>
         </div>
 

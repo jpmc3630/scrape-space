@@ -29,7 +29,8 @@ mongoose.connect("mongodb+srv://admin:admin@cluster0-nizeq.mongodb.net/test?retr
 app.get('/comments/:artId', async (req, res) => {
 
   db.headlines.find({_id: req.params.artId })
-  .populate("commentsIds")
+  .populate({path: 'commentsIds', options: {sort:{"created_at": "descending"}}})
+  
   .then(function(popComments) {
 
     console.log(popComments);
@@ -64,21 +65,7 @@ app.post("/submit", function(req, res) {
 });
 
 
-// search news route
-// app.get('/search/:criteria', async (req, res) => {
-//   try {
-    // search the news and return it ... req.params.criteria
-    // let news = await db.headlines.fuzzySearch('moon').then(console.log).catch(console.error);
-    // console.log(news);
-    // res.json({ success: true, data: news });
-    
-//   } catch (error) {
-//     console.error(error);
-//   }
 
-
-
-// });
 
 
 
@@ -89,7 +76,7 @@ function escapeRegex(text) {
 app.get('/search/:criteria', async (req, res) => {
   if (req.params.criteria !== undefined) {
      const regex = new RegExp(escapeRegex(req.params.criteria), 'gi');
-     db.headlines.find({ "body": regex }, function(err, news) {
+     db.headlines.find({$or:[{ "body": regex },{ "title": regex },{ "byline": regex },{ "url": regex }]}, function(err, news) {
          if(err) {
              console.log(err);
          } else {
@@ -135,14 +122,15 @@ app.get('/scrape/:order', async (req, res) => {
       let body = $(this).find('.synopsis').text().replace(/(\r\n|\n|\r)/gm,""); 
       let url = $(this).parent().attr('href');
       let date = $(this).find('.published-date').attr('data-published-date');
-
+      let commentsTally = 0;
       let obj = {
         title,
         byline,
         img,
         body,
         url,
-        date
+        date,
+        commentsTally
       }
       
       resArr.push(obj);
