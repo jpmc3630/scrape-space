@@ -85,7 +85,14 @@ function Navbar(props) {
             aria-label="Search"
             onChange={(e) => setSearchText(e.target.value)}
           />
-          <button className="btn btn-outline-success my-2 my-sm-0" onClick={(e) => {passSearch(e); props.updateSearch(searchText);}}>
+          <button className="btn btn-outline-success my-2 my-sm-0" onClick={(e) => {
+              passSearch(e); 
+              if (searchText === '') {
+                props.updateSearch('noSearch');
+              } else {
+              props.updateSearch(searchText);
+              }
+            }}>
             Search
           </button>
         </form>
