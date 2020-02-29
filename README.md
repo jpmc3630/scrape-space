@@ -2,6 +2,7 @@
 Check it out live at <https://scrape-space.herokuapp.com>
 
 ## About
+This app scrapes the news section of Space.com and provides some features listed below.
 I made this scraper to learn React JS. This is my first Express/React app. 
 
 ## Features
